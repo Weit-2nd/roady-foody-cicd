@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: roady-foody-api
+spec:
+  progressDeadlineSeconds: 900
+  selector:
+    matchLabels:
+      app: roady-foody-api
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  revisionHistoryLimit: 3
+  template:
+    metadata:
+      labels:
+        app: roady-foody-api
+    spec:
+      containers:
+        - image: ghcr.io/weit-2nd/roady-foody:latest
+          imagePullPolicy: Always
+          name: roady-foody-api
+          resources:
+            limits:
+              cpu: 600m
+              memory: 1000Mi
+          ports:
+            - containerPort: 8080
+          env:
+            - name: APP_PHASE
+              value: sandbox
+            - name: APP_NAME
+              value: roady-foody-api
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: roady-foody-secret
+                  key: awsSecretKey
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: roady-foody-secret
+                  key: awsAccessKey
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: roady-foody-secret
+                  key: sentryDsn
+            - name: JAVA_TOOL_OPTIONS
+              value: >
+                -XX:InitialRAMPercentage=50
+                -XX:MaxRAMPercentage=80
+                -XX:MinRAMPercentage=80
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: /ready
+            initialDelaySeconds: 60
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              port: 8080
+              path: /health
+            initialDelaySeconds: 130
+            timeoutSeconds: 10
+            failureThreshold: 10
+      volumes:
+        - name: share-vol
+          emptyDir: {}
+      imagePullSecrets:
+        - name: ghcr-login-secret

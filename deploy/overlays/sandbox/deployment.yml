@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: roady-foody-api
+spec:
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+  template:
+    spec:
+      containers:
+        - name: roady-foody-api
+          env:
+            - name: APP_PHASE
+              value: sandbox
+      nodeSelector:
+        performance: high

@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: roady-foody-api
+spec:
+  template:
+    spec:
+      containers:
+        - name: roady-foody-api
+          env:
+            - name: APP_PHASE
+              value: stable
+          resources:
+            limits:
+              cpu: 800m
+              memory: 2048Mi
+      nodeSelector:
+        performance: high

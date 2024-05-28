@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: roady-foody-api-ingress
+  namespace: sandbox
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: 50mb
+spec:
+  rules:
+  - host: sandbox.jayden-bin.kro.kr
+    http:
+      paths:
+      - path: /(api|test|docs)/*
+        pathType: Prefix
+        backend:
+          service:
+            name: roady-foody-api-svc
+            port:
+              number: 80
+  tls:
+    - hosts:
+        - sandbox.jayden-bin.kro.kr
+      secretName: star-jayden-bin-kro-kr
