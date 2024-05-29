@@ -14,7 +14,7 @@ spec:
   - host: jayden-bin.kro.kr
     http:
       paths:
-      - path: /(api|test|docs)/*
+      - path: /api/*
         pathType: Prefix
         backend:
           service:

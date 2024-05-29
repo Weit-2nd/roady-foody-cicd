@@ -14,7 +14,7 @@ spec:
   - host: sandbox.jayden-bin.kro.kr
     http:
       paths:
-      - path: /(api|test|docs)/*
+      - path: /(api|swagger-ui)/*
         pathType: Prefix
         backend:
           service:
