@@ -3,10 +3,6 @@ kind: Deployment
 metadata:
   name: roady-foody-api
 spec:
-  strategy:
-    rollingUpdate:
-      maxSurge: 0
-      maxUnavailable: 1
   template:
     spec:
       containers:
